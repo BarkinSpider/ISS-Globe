@@ -39,7 +39,7 @@ export function Overlay() {
         <div className="space-y-5">
           <Slider icon={<Activity size={16}/>} label="ISS Speed" value={issSpeed} min={0} max={5} step={0.1} onChange={setIssSpeed} />
           <Slider icon={<Globe size={16}/>} label="Globe Rot" value={globeSpeed} min={0} max={5} step={0.1} onChange={setGlobeSpeed} />
-          <Slider icon={<Sun size={16}/>} label="Shading" value={shading} min={0} max={2} step={0.1} onChange={setShading} />
+          <Slider icon={<Sun size={16}/>} label="Shading" value={shading} min={0} max={5} step={0.1} onChange={setShading} />
           <Slider icon={<Eye size={16}/>} label="Translucency" value={translucency} min={0.1} max={1} step={0.05} onChange={setTranslucency} />
           <Slider icon={<Cloud size={16}/>} label="Cloud Opac" value={cloudOpac} min={0} max={2} step={0.05} onChange={setCloudOpac} />
           <Slider icon={<Cloud size={16}/>} label="Cloud Speed" value={cloudSpeed} min={0} max={3} step={0.1} onChange={setCloudSpeed} />

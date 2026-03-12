@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef } from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../store';
@@ -12,52 +12,10 @@ export function Earth() {
   
   const { globeSpeed, translucency, wireframe, cloudOpac, cloudSpeed } = useStore();
 
-  const earthTexture = useLoader(THREE.TextureLoader, 'https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg');
-
-  // Generate clouds texture
-  const cloudTex = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 512;
-    const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = 'rgba(0,0,0,0)';
-    ctx.fillRect(0, 0, 1024, 512);
-    for (let i = 0; i < 200; i++) {
-      const x = Math.random() * 1024;
-      const y = Math.random() * 512;
-      const r = 20 + Math.random() * 60;
-      const alpha = 0.15 + Math.random() * 0.4;
-
-      const drawCloud = (cx: number, cy: number) => {
-        const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-        grd.addColorStop(0, `rgba(255,255,255,${alpha})`);
-        grd.addColorStop(0.5, `rgba(255,255,255,${alpha * 0.5})`);
-        grd.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = grd;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fill();
-      };
-
-      drawCloud(x, y);
-      
-      // Wrap edges
-      if (x < r) drawCloud(x + 1024, y);
-      if (x > 1024 - r) drawCloud(x - 1024, y);
-      if (y < r) drawCloud(x, y + 512);
-      if (y > 512 - r) drawCloud(x, y - 512);
-      
-      // Wrap corners
-      if (x < r && y < r) drawCloud(x + 1024, y + 512);
-      if (x < r && y > 512 - r) drawCloud(x + 1024, y - 512);
-      if (x > 1024 - r && y < r) drawCloud(x - 1024, y + 512);
-      if (x > 1024 - r && y > 512 - r) drawCloud(x - 1024, y - 512);
-    }
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.wrapS = THREE.RepeatWrapping;
-    tex.wrapT = THREE.ClampToEdgeWrapping;
-    return tex;
-  }, []);
+  const [earthTexture, cloudTex] = useLoader(THREE.TextureLoader, [
+    'https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg',
+    'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_clouds_1024.png'
+  ]);
 
   useFrame((state, delta) => {
     const speed = globeSpeed * 0.0003 * (delta * 60); // normalize to 60fps
@@ -102,6 +60,7 @@ export function Earth() {
           blending={THREE.AdditiveBlending}
           side={THREE.BackSide}
           transparent
+          depthWrite={false}
         />
       </mesh>
 
@@ -113,7 +72,9 @@ export function Earth() {
           transparent 
           opacity={cloudOpac} 
           roughness={1} 
-          metalness={0} 
+          metalness={0}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
         />
       </mesh>
     </group>

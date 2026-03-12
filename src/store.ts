@@ -26,7 +26,7 @@ interface AppState {
 export const useStore = create<AppState>((set) => ({
   issSpeed: 1,
   globeSpeed: 2,
-  shading: 0.8,
+  shading: 1.5,
   translucency: 1,
   cloudOpac: 0.4,
   cloudSpeed: 1.1,

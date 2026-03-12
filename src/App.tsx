@@ -26,11 +26,11 @@ export default function App() {
         
         <directionalLight 
           position={[300, 150, 200]} 
-          intensity={shading} 
+          intensity={shading * 2.5} 
           castShadow 
           shadow-mapSize={[1024, 1024]}
         />
-        <ambientLight intensity={0.3} color="#404050" />
+        <ambientLight intensity={0.8} color="#ffffff" />
 
         <Suspense fallback={null}>
           <Earth />
