@@ -18,7 +18,7 @@ export default function App() {
   return (
     <div className="w-full h-screen bg-black overflow-hidden relative">
       <Canvas
-        camera={{ position: [200, 100, 300], fov: 60 }}
+        camera={{ position: [100, 50, 150], fov: 75 }}
         shadows
         gl={{ antialias: true }}
       >
@@ -40,7 +40,7 @@ export default function App() {
 
         <OrbitControls 
           enableDamping 
-          minDistance={150} 
+          minDistance={90} 
           maxDistance={800} 
         />
       </Canvas>

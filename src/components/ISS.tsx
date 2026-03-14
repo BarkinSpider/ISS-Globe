@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStore } from '../store';
 
-const ORBIT_RADIUS = 98;
+const ORBIT_RADIUS = 105;
 const INCLINATION = 51.6 * Math.PI / 180;
 
 export function ISS() {
@@ -82,7 +82,7 @@ export function ISS() {
   return (
     <group>
       {/* ISS Group */}
-      <group ref={issRef} scale={[1.2, 1.2, 1.2]}>
+      <group ref={issRef} scale={[0.3, 0.3, 0.3]}>
         {/* Truss */}
         <group>
           <mesh position={[0, 0, 0]} material={materials.gray}>
@@ -179,7 +179,7 @@ export function ISS() {
       </group>
 
       {/* Glow Sprite */}
-      <sprite ref={glowRef} scale={[30, 30, 1]}>
+      <sprite ref={glowRef} scale={[15, 15, 1]}>
         <spriteMaterial map={glowTex} transparent blending={THREE.AdditiveBlending} />
       </sprite>
     </group>
