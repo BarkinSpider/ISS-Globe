@@ -10,6 +10,7 @@ export function Environment() {
   const impactsRef = useRef<THREE.Group[]>([]);
   const starsRef = useRef<THREE.Group>(null);
   const meteorCount = useStore(state => state.meteorCount);
+  const globeSpeed = useStore(state => state.globeSpeed);
 
   const MAX_METEORS = 100;
 
@@ -92,7 +93,7 @@ export function Environment() {
     
     // Animate starfield
     if (starsRef.current) {
-      starsRef.current.rotation.y += delta * 0.0001;
+      starsRef.current.rotation.y += globeSpeed * 0.00005 * dt;
       starsRef.current.rotation.x += delta * 0.00005;
     }
 

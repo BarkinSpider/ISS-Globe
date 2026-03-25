@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+export type PlanetType = 'earth-day' | 'earth-day-hires' | 'earth-day-classic' | 'earth-day-satellite' | 'earth-night' | 'moon' | 'mars' | 'jupiter' | 'venus' | 'mercury' | 'saturn' | 'uranus' | 'neptune' | 'pluto' | 'sun';
+
 interface AppState {
   issSpeed: number;
   globeSpeed: number;
@@ -12,6 +14,7 @@ interface AppState {
   lat: number;
   lon: number;
   alt: number;
+  planetType: PlanetType;
   setIssSpeed: (v: number) => void;
   setGlobeSpeed: (v: number) => void;
   setShading: (v: number) => void;
@@ -21,6 +24,7 @@ interface AppState {
   setWireframe: (v: boolean) => void;
   setMeteorCount: (v: number) => void;
   setTelemetry: (lat: number, lon: number, alt: number) => void;
+  setPlanetType: (v: PlanetType) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -35,6 +39,7 @@ export const useStore = create<AppState>((set) => ({
   lat: 0,
   lon: 0,
   alt: 420,
+  planetType: 'earth-day',
   setIssSpeed: (v) => set({ issSpeed: v }),
   setGlobeSpeed: (v) => set({ globeSpeed: v }),
   setShading: (v) => set({ shading: v }),
@@ -44,4 +49,5 @@ export const useStore = create<AppState>((set) => ({
   setWireframe: (v) => set({ wireframe: v }),
   setMeteorCount: (v) => set({ meteorCount: v }),
   setTelemetry: (lat, lon, alt) => set({ lat, lon, alt }),
+  setPlanetType: (v) => set({ planetType: v }),
 }));

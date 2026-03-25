@@ -7,8 +7,8 @@ export function Overlay() {
   const [isMinimized, setIsMinimized] = useState(true);
   const { 
     lat, lon, alt,
-    issSpeed, globeSpeed, shading, translucency, cloudOpac, cloudSpeed, wireframe, meteorCount,
-    setIssSpeed, setGlobeSpeed, setShading, setTranslucency, setCloudOpac, setCloudSpeed, setWireframe, setMeteorCount
+    issSpeed, globeSpeed, shading, translucency, cloudOpac, cloudSpeed, wireframe, meteorCount, planetType,
+    setIssSpeed, setGlobeSpeed, setShading, setTranslucency, setCloudOpac, setCloudSpeed, setWireframe, setMeteorCount, setPlanetType
   } = useStore();
 
   return (
@@ -23,7 +23,7 @@ export function Overlay() {
             <Satellite className="w-6 h-6 text-emerald-400" />
             <div className="flex items-baseline gap-2">
               <h1 className="text-xl font-bold tracking-wider text-emerald-50">ISS TRACKER</h1>
-              <span className="text-xs text-emerald-500/60 font-medium">v0.5</span>
+              <span className="text-xs text-emerald-500/60 font-medium">v0.6</span>
             </div>
           </div>
           <button 
@@ -59,6 +59,34 @@ export function Overlay() {
               </div>
 
               <div className="space-y-5">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-xs text-emerald-400/80 mb-2">
+                    <Globe size={16}/>
+                    <span>Celestial Body</span>
+                  </div>
+                  <select 
+                    value={planetType}
+                    onChange={(e) => setPlanetType(e.target.value as any)}
+                    className="w-full bg-emerald-950/50 border border-emerald-800/50 text-emerald-100 text-sm rounded-lg p-2 outline-none focus:border-emerald-500 transition-colors"
+                  >
+                    <option value="earth-day">Earth (Day)</option>
+                    <option value="earth-day-hires">Earth (High Res)</option>
+                    <option value="earth-day-classic">Earth (Classic)</option>
+                    <option value="earth-day-satellite">Earth (Satellite)</option>
+                    <option value="earth-night">Earth (Night)</option>
+                    <option value="moon">Moon</option>
+                    <option value="mars">Mars</option>
+                    <option value="jupiter">Jupiter</option>
+                    <option value="venus">Venus</option>
+                    <option value="mercury">Mercury</option>
+                    <option value="saturn">Saturn</option>
+                    <option value="uranus">Uranus</option>
+                    <option value="neptune">Neptune</option>
+                    <option value="pluto">Pluto</option>
+                    <option value="sun">Sun</option>
+                  </select>
+                </div>
+
                 <Slider icon={<Activity size={16}/>} label="ISS Speed" value={issSpeed} min={0} max={5} step={0.1} onChange={setIssSpeed} />
                 <Slider icon={<Globe size={16}/>} label="Globe Rot" value={globeSpeed} min={0} max={5} step={0.1} onChange={setGlobeSpeed} />
                 <Slider icon={<Sun size={16}/>} label="Shading" value={shading} min={0} max={5} step={0.1} onChange={setShading} />
