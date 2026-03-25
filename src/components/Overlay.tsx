@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Settings, Globe, Satellite, Cloud, Sun, Eye, Activity, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 
 export function Overlay() {
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
   const { 
     lat, lon, alt,
     issSpeed, globeSpeed, shading, translucency, cloudOpac, cloudSpeed, wireframe, meteorCount,
@@ -21,7 +21,10 @@ export function Overlay() {
         <div className={`flex items-center justify-between transition-all ${isMinimized ? '' : 'mb-6 border-b border-emerald-500/30 pb-4'}`}>
           <div className="flex items-center gap-3">
             <Satellite className="w-6 h-6 text-emerald-400" />
-            <h1 className="text-xl font-bold tracking-wider text-emerald-50">ISS TRACKER</h1>
+            <div className="flex items-baseline gap-2">
+              <h1 className="text-xl font-bold tracking-wider text-emerald-50">ISS TRACKER</h1>
+              <span className="text-xs text-emerald-500/60 font-medium">v0.5</span>
+            </div>
           </div>
           <button 
             onClick={() => setIsMinimized(!isMinimized)}

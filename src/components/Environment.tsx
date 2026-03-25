@@ -4,59 +4,11 @@ import { Stars } from '@react-three/drei';
 import * as THREE from 'three';
 import { useStore } from '../store';
 
-const Nebula = () => {
-  const tex = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 2048; 
-    canvas.height = 1024;
-    const ctx = canvas.getContext('2d')!;
-    
-    // Deep space background
-    ctx.fillStyle = '#020205';
-    ctx.fillRect(0, 0, 2048, 1024);
-    
-    // Draw milky way / nebula band
-    for(let i = 0; i < 400; i++) {
-        const x = Math.random() * 2048;
-        // Curve the band slightly like a sine wave
-        const yOffset = Math.sin(x / 2048 * Math.PI * 2) * 150;
-        const y = 512 + yOffset + (Math.random() - 0.5) * 500;
-        const r = 100 + Math.random() * 300;
-        
-        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-        const colors = [
-          'rgba(60, 20, 120, 0.06)',  // Deep purple
-          'rgba(20, 50, 140, 0.06)',  // Deep blue
-          'rgba(120, 30, 60, 0.04)',  // Magenta
-          'rgba(10, 80, 100, 0.04)'   // Teal
-        ];
-        grad.addColorStop(0, colors[Math.floor(Math.random() * colors.length)]);
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
-        
-        ctx.fillStyle = grad;
-        ctx.beginPath(); 
-        ctx.arc(x, y, r, 0, Math.PI * 2); 
-        ctx.fill();
-    }
-    
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.ClampToEdgeWrapping;
-    return texture;
-  }, []);
-
-  return (
-    <mesh>
-      <sphereGeometry args={[1500, 32, 32]} />
-      <meshBasicMaterial map={tex} side={THREE.BackSide} depthWrite={false} />
-    </mesh>
-  );
-};
-
 export function Environment() {
   const meteorsRef = useRef<THREE.Group[]>([]);
   const cometsRef = useRef<THREE.Group[]>([]);
   const impactsRef = useRef<THREE.Group[]>([]);
+  const starsRef = useRef<THREE.Group>(null);
   const meteorCount = useStore(state => state.meteorCount);
 
   const MAX_METEORS = 100;
@@ -138,6 +90,12 @@ export function Environment() {
   useFrame((state, delta) => {
     const dt = delta * 60;
     
+    // Animate starfield
+    if (starsRef.current) {
+      starsRef.current.rotation.y += delta * 0.0001;
+      starsRef.current.rotation.x += delta * 0.00005;
+    }
+
     // Animate meteors
     meteorsRef.current.forEach((m, i) => {
       if (!m) return;
@@ -229,15 +187,21 @@ export function Environment() {
 
   return (
     <group>
-      {/* Imaginative Nebula Background */}
-      <Nebula />
-
-      {/* Realistic Stars using Drei */}
-      <Stars radius={300} depth={60} count={10000} factor={7} saturation={1} fade speed={1} />
+      {/* Starfield */}
+      <group ref={starsRef}>
+        {/* Tiny background stars */}
+        <Stars radius={1000} depth={200} count={15000} factor={6} saturation={0.2} fade speed={0.02} />
+        {/* Medium colorful stars */}
+        <Stars radius={1000} depth={200} count={4000} factor={15} saturation={0.8} fade speed={0.04} />
+        {/* Large bright stars */}
+        <Stars radius={1000} depth={200} count={800} factor={35} saturation={1} fade speed={0.06} />
+        {/* Very large, rare stars */}
+        <Stars radius={1000} depth={200} count={200} factor={60} saturation={0.9} fade speed={0.08} />
+      </group>
 
       {/* Meteors */}
       {meteorsData.map((data, i) => (
-        <group key={`meteor-${i}`} ref={el => meteorsRef.current[i] = el!} visible={false}>
+        <group key={`meteor-${i}`} ref={el => { if (el) meteorsRef.current[i] = el; }} visible={false}>
           <mesh>
             <sphereGeometry args={[data.headSize, 6, 6]} />
             <meshBasicMaterial color={0xffffff} />
@@ -251,7 +215,7 @@ export function Environment() {
 
       {/* Comets */}
       {cometsData.map((data, i) => (
-        <group key={`comet-${i}`} ref={el => cometsRef.current[i] = el!} position={new THREE.Vector3(...data.start)}>
+        <group key={`comet-${i}`} ref={el => { if (el) cometsRef.current[i] = el; }} position={new THREE.Vector3(...data.start)}>
           <mesh>
             <sphereGeometry args={[2 + Math.random() * 2, 12, 12]} />
             <meshBasicMaterial color={0xffffff} />
@@ -273,7 +237,7 @@ export function Environment() {
 
       {/* Atmospheric Impacts */}
       {impactData.map((_, i) => (
-        <group key={`impact-${i}`} ref={el => impactsRef.current[i] = el!} visible={false}>
+        <group key={`impact-${i}`} ref={el => { if (el) impactsRef.current[i] = el; }} visible={false}>
           {/* Core Flash */}
           <mesh>
             <sphereGeometry args={[1.5, 16, 16]} />
